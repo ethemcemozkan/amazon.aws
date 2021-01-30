@@ -18,17 +18,16 @@ extends_documentation_fragment:
 short_description: Look up Cloudformation stack outputs
 description:
   - Look up AWS Cloudformation outputs provided the caller
-    has the appropriate permissions to read the output and stack is createds.
+    has the appropriate permissions to read the output and stack is created.
   - Lookup is based on the stack name and output key
 options:
   _terms:
-    description: Name of the stack to look up in AWS Cloudformation.
+    description: Name of the stack to lookup in AWS Cloudformation.
     required: True
   output_key:
     description: Key of the output that is in provided stack.
-    default: false
-    type: boolean
-    version_added: 1.0.0
+    default: None
+    type: String
 '''
 
 EXAMPLES = r"""
@@ -102,7 +101,8 @@ class LookupModule(LookupBase):
             raise AnsibleError('botocore and boto3 are required for aws_cloudformation lookup.')
 
         if len(terms) < 1:
-            raise AnsibleError('Provide Cloudformation stack name to search outputs in.')
+            raise AnsibleError("Provide Cloudformation stack name. Example: "
+                               "lookup('amazon.aws.aws_cloudformation', 'stack_name', output_key='output_key' )")
 
         credentials = {}
         if aws_profile:
